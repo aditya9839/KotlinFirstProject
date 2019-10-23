@@ -1,17 +1,20 @@
 package com.example.kotlinfirstproject
 
+import android.Manifest
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.util.Log
+import androidx.core.content.ContextCompat
 
 class Wifi_info(val mctx: Context) : BroadcastReceiver() {
 
     override fun onReceive(p0: Context?, p1: Intent?) {
 
-        Log.d("WifiReceiver", "Have Wifi Connection");
+        Log.d("WifiReceiver", "Have Wifi Connection")
 
 //        val conn = mctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 //        val netInfo = conn.activeNetworkInfo
@@ -24,7 +27,15 @@ class Wifi_info(val mctx: Context) : BroadcastReceiver() {
     }
 
     fun getWifiInfo(){
+
+        if (ContextCompat.checkSelfPermission(mctx, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED) {
+            Log.d("TAG","No permission granted")
+        }
+
         val connManager = mctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+
 
         Log.d("TAG","connManager " +connManager)
 

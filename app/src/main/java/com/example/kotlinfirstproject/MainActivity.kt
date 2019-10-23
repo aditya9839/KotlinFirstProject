@@ -1,56 +1,38 @@
 package com.example.kotlinfirstproject
 
+
+//import com.example.kotlinfirstproject.AlarmReceiver
+//import a
+import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.GeofencingClient
+import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.activity_main.*
+import android.content.Context.LOCATION_SERVICE
+import androidx.core.content.ContextCompat.getSystemService
+import android.location.LocationManager
+import androidx.core.app.ComponentActivity.ExtraData
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.provider.Settings
 
-//import AlarmReceiver
-//import android.app.AlarmManager
 
 class MainActivity : AppCompatActivity() {
 
-//    private val mReceiver = MyReceiver()
+    //    private val mReceiver = MyReceiver()
     lateinit var geofencingClient: GeofencingClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
-
-//        val filter = IntentFilter()
-//        filter.addAction(Intent.ACTION_POWER_DISCONNECTED)
-//        filter.addAction(Intent.ACTION_POWER_CONNECTED)
-//        filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION)
-//        filter.addAction(Intent.ACTION_BOOT_COMPLETED)
-//        filter.addAction(Intent.ACTION_BOOT_COMPLETED)
-//        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(ACTION_CUSTOM_BROADCAST));
-//        Register the receiver using the activity context
-//        this.registerReceiver(mReceiver, filter)
-
-//        var alarm = Intent(this,AlarmReceiver::class.java)
-//        startService(alarm)
-//        var alarmRunning = (PendingIntent.getBroadcast(this, 0, alarm, PendingIntent.FLAG_NO_CREATE) != null);
-//
-//        Log.d("This is tag",""+alarmRunning)
-//        if (alarmRunning == false) {
-//            Log.d("TAGGG","running....")
-//            val pendingIntent = PendingIntent.getBroadcast(this, 0, alarm, 0)
-//            val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-//            alarmManager.setRepeating(
-//                AlarmManager.ELAPSED_REALTIME_WAKEUP,
-//                SystemClock.elapsedRealtime(),
-//                1000000,
-//                pendingIntent
-//            )
-//        }
-//        Log.d("This is tag",""+alarmRunning)
-//
     }
 
     fun startService(view: View) {
@@ -59,15 +41,54 @@ class MainActivity : AppCompatActivity() {
         Log.d("TAG", "this is first time I am printing something on kotlin$input")
 
 
-        var serviceIntent = Intent(this,MyService::class.java)
-        serviceIntent.putExtra("inputExtr",input.toString())
+        var serviceIntent = Intent(this, MyService::class.java)
+        serviceIntent.putExtra("inputExtr", input.toString())
         ContextCompat.startForegroundService(this, serviceIntent)
     }
 
     fun stopService(view: View) {
-        serviceIntent = Intent(this,MyService::class.java)
+        serviceIntent = Intent(this, MyService::class.java)
         stopService(serviceIntent)
     }
 
-    var serviceIntent : Intent? = null
+    var serviceIntent: Intent? = null
+    fun check_permission(view: View) {
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            Log.d("TAG", "No permission granted")
+
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION),
+                0
+            )
+            run {
+                // permission has been granted, continue as usual
+                val locationResult = LocationServices
+                    .getFusedLocationProviderClient(
+                        this
+                        /** Context */
+                    )
+                    .getLastLocation()
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        Log.d("Tag", "onRequestPermissionsResult")
+
+        val lm = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        var gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        if (!gps_enabled){
+            var intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent)
+        }
+    }
 }

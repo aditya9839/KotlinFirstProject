@@ -26,5 +26,11 @@
         android:layout_height="wrap_content"
         android:onClick="stopService"/>
 
+    <Button
+        android:id="@+id/permissions"
+        android:text="location permission"
+        android:layout_width="match_parent"
+        android:onClick="check_permission"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
