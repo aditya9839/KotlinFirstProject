@@ -1,8 +1,5 @@
 package com.example.kotlinfirstproject
 
-
-//import com.example.kotlinfirstproject.AlarmReceiver
-//import a
 import android.Manifest
 import android.content.Context
 import android.content.Intent
@@ -16,7 +13,6 @@ import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_main.*
 import android.content.IntentSender
 import android.location.LocationManager
-import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.*
 
@@ -61,14 +57,6 @@ class MainActivity : AppCompatActivity() {
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 0
             )
-//            run {
-//                 permission has been granted, continue as usual
-//                val locationResult = LocationServices
-//                    .getFusedLocationProviderClient(
-//                        this
-//                        /** Context */
-//                    )
-//                    .getLastLocation()
         }
     }
 
@@ -80,8 +68,8 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         val lm = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        if (!gps_enabled) {
+        val gpsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        if (!gpsEnabled) {
             Log.d("Tag", "onRequestPermissionsResult :$mGoogleApiClient")
 
             if (mGoogleApiClient == null) {
@@ -129,8 +117,6 @@ class MainActivity : AppCompatActivity() {
                         LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
                             Log.d("REs", "" + status)
                             try {
-                                //                                     Show the dialog by calling startResolutionForResult(),
-                                //                                     and check the result in onActivityResult().
                                 status.startResolutionForResult(
                                     this@MainActivity,
                                     1
