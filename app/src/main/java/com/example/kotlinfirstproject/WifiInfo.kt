@@ -16,13 +16,6 @@ class WifiInfo(val mctx: Context) : BroadcastReceiver() {
 
         Log.d("WifiReceiver", "Have Wifi Connection")
 
-//        val conn = mctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-//        val netInfo = conn.activeNetworkInfo
-//        if (netInfo != null && netInfo.getType() == ConnectivityManager.TYPE_WIFI)
-//            Log.d("WifiReceiver", "Have Wifi Connection");
-//        else
-//            Log.d("WifiReceiver", "Don't have Wifi Connection");
-//        if (p1.)
         getWifiInfo()
     }
 
@@ -37,7 +30,7 @@ class WifiInfo(val mctx: Context) : BroadcastReceiver() {
 
 
 
-        Log.d("TAG","connManager " +connManager)
+        Log.d("TAG", "connManager $connManager")
 
         //get Network Info is depreciated
         val networkInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
