@@ -101,6 +101,8 @@ class MainActivity : AppCompatActivity() {
                     .addLocationRequest(locationRequest)
 
                 builder.setAlwaysShow(true)
+
+                //Depricated SettingsApi must be removed
                 val result = LocationServices.SettingsApi.checkLocationSettings(
                     mGoogleApiClient,
                     builder.build()

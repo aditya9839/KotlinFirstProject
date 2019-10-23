@@ -13,7 +13,7 @@ import android.util.Log
 
 class MyService : Service() {
 
-    private val mReceiver = Wifi_info(this)
+    private val mReceiver = WifiInfo(this)
 
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

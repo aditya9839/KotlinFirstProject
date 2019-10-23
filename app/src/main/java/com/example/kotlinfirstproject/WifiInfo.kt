@@ -10,7 +10,7 @@ import android.net.wifi.WifiManager
 import android.util.Log
 import androidx.core.content.ContextCompat
 
-class Wifi_info(val mctx: Context) : BroadcastReceiver() {
+class WifiInfo(val mctx: Context) : BroadcastReceiver() {
 
     override fun onReceive(p0: Context?, p1: Intent?) {
 
@@ -39,9 +39,11 @@ class Wifi_info(val mctx: Context) : BroadcastReceiver() {
 
         Log.d("TAG","connManager " +connManager)
 
+        //get Network Info is depreciated
         val networkInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-        Log.d("TAG","connManager " +networkInfo)
+        Log.d("TAG", "connManager $networkInfo")
 
+        //isConnected is depricated
         if (networkInfo.isConnected) {
             Log.d("tag","Connected")
             val wifiManager = mctx.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
