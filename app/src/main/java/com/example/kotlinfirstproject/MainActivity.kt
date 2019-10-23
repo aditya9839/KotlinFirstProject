@@ -13,21 +13,18 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.google.android.gms.location.GeofencingClient
-import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.activity_main.*
-import android.content.Context.LOCATION_SERVICE
-import androidx.core.content.ContextCompat.getSystemService
+import android.content.IntentSender
 import android.location.LocationManager
-import androidx.core.app.ComponentActivity.ExtraData
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import android.provider.Settings
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.location.*
 
 
 class MainActivity : AppCompatActivity() {
 
-    //    private val mReceiver = MyReceiver()
-    lateinit var geofencingClient: GeofencingClient
+    private var mGoogleApiClient: GoogleApiClient? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         Log.d("TAG", "this is first time I am printing something on kotlin$input")
 
 
-        var serviceIntent = Intent(this, MyService::class.java)
+        val serviceIntent = Intent(this, MyService::class.java)
         serviceIntent.putExtra("inputExtr", input.toString())
         ContextCompat.startForegroundService(this, serviceIntent)
     }
@@ -51,8 +48,8 @@ class MainActivity : AppCompatActivity() {
         stopService(serviceIntent)
     }
 
-    var serviceIntent: Intent? = null
-    fun check_permission(view: View) {
+    private var serviceIntent: Intent? = null
+    fun checkpermission(view: View) {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
@@ -61,18 +58,17 @@ class MainActivity : AppCompatActivity() {
 
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 0
             )
-            run {
-                // permission has been granted, continue as usual
-                val locationResult = LocationServices
-                    .getFusedLocationProviderClient(
-                        this
-                        /** Context */
-                    )
-                    .getLastLocation()
-            }
+//            run {
+//                 permission has been granted, continue as usual
+//                val locationResult = LocationServices
+//                    .getFusedLocationProviderClient(
+//                        this
+//                        /** Context */
+//                    )
+//                    .getLastLocation()
         }
     }
 
@@ -82,13 +78,70 @@ class MainActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        Log.d("Tag", "onRequestPermissionsResult")
 
         val lm = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        var gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        if (!gps_enabled){
-            var intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(intent)
+        val gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        if (!gps_enabled) {
+            Log.d("Tag", "onRequestPermissionsResult :$mGoogleApiClient")
+
+            if (mGoogleApiClient == null) {
+                Log.d("Tag", "onRequestPermissionsResult :$mGoogleApiClient")
+                mGoogleApiClient =
+                    GoogleApiClient.Builder(this@MainActivity).addApi(LocationServices.API)
+                        .addConnectionCallbacks(object : GoogleApiClient.ConnectionCallbacks {
+                            override fun onConnected(p0: Bundle?) {
+                                Log.d("TAG", "onConnected")
+
+                            }
+
+                            override fun onConnectionSuspended(p0: Int) {
+                                Log.d("TAG", "onConnectionSuspended")
+
+                            }
+//            var intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//            startActivity(intent)
+                        }
+                        ).addOnConnectionFailedListener { Log.d("TAG", "onConnectionFailed") }.build()
+                Log.d("Tag", "onRequestPermissionsResult :$mGoogleApiClient")
+                mGoogleApiClient?.connect()
+
+                val locationRequest = LocationRequest.create()
+                locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+                locationRequest.interval = (30 * 1000).toLong()
+                locationRequest.fastestInterval = (5 * 1000).toLong()
+                val builder = LocationSettingsRequest.Builder()
+                    .addLocationRequest(locationRequest)
+
+                builder.setAlwaysShow(true)
+                val result = LocationServices.SettingsApi.checkLocationSettings(
+                    mGoogleApiClient,
+                    builder.build()
+
+                )
+
+                result.setResultCallback { p0 ->
+                    Log.d("REs", "" + result)
+                    val status = p0.status
+                    Log.d("REs", "" + status)
+
+                    when (status.statusCode) {
+
+                        LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
+                            Log.d("REs", "" + status)
+                            try {
+                                //                                     Show the dialog by calling startResolutionForResult(),
+                                //                                     and check the result in onActivityResult().
+                                status.startResolutionForResult(
+                                    this@MainActivity,
+                                    1
+                                )
+                            } catch (e: IntentSender.SendIntentException) {
+                                e.printStackTrace()
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -30,7 +30,7 @@
         android:id="@+id/permissions"
         android:text="location permission"
         android:layout_width="match_parent"
-        android:onClick="check_permission"
+        android:onClick="checkpermission"
         android:layout_height="wrap_content"/>
 
 </LinearLayout>
