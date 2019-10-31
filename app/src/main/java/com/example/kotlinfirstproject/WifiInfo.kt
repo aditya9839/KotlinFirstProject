@@ -34,32 +34,5 @@ class WifiInfo(private val mctx: Context) : BroadcastReceiver() {
         }
         else
         Log.d("Tag", "Kindly enable wifi")
-
-//      below code is depricated in api 29
-//        val connManager = mctx.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-//        Log.d("TAG", "connManager $connManager")
-
-        //get Network Info is depreciated
-//        val networkInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-//        Log.d("TAG", "connManager $networkInfo")
-
-        //isConnected is depricated
-//        if (networkInfo.isConnected) {
-//            Log.d("tag","Connected")
-//            val wifiManager = mctx.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-//            val wifiInfo = wifiManager.connectionInfo
-//            bssid = wifiInfo.bssid
-//            val ssid = wifiInfo.ssid
-//            val mac = wifiInfo.macAddress
-//            val linkSpeed = wifiInfo.linkSpeed
-//            val ip = wifiInfo.ipAddress
-//            Log.d(
-//                "This is wifi Info", "\nBSSID : " + bssid +
-//                        "\nSSID : " + ssid + "\nLink speed : " + linkSpeed +
-//                        "\nIP : " + ip
-//            )
-//        }
-//        else
-//            Log.d("tag","Not Connected")
     }
 }
