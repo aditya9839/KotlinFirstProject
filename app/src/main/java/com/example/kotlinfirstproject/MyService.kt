@@ -21,7 +21,7 @@ class MyService : Service() {
         val inputt = intent?.getStringExtra("inputExtr")
         val notificationIntent = Intent(this,MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(this,0,notificationIntent,0)
-        val notification = NotificationCompat.Builder(this,App().CHANNEL_ID).setContentTitle("Example Service").
+        val notification = NotificationCompat.Builder(this,App().channelid).setContentTitle("Example Service").
             setContentText(inputt).setSmallIcon(R.drawable.ic_launcher_background)
             .setContentIntent(pendingIntent).build()
         startForeground(1,notification)

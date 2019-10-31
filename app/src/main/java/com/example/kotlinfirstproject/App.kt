@@ -7,7 +7,7 @@ import android.os.Build
 
 class App : Application() {
 
-    var CHANNEL_ID = "exampleServiceChannel";
+    var channelid = "exampleServiceChannel"
 
     override fun onCreate() {
         super.onCreate()
@@ -17,7 +17,7 @@ class App : Application() {
 
     private fun createNotificationChannel(){
         val serviceChannel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel(CHANNEL_ID,"EXAMPLE SERVICE CHANNEL",NotificationManager.IMPORTANCE_DEFAULT)
+            NotificationChannel(channelid,"EXAMPLE SERVICE CHANNEL",NotificationManager.IMPORTANCE_DEFAULT)
         } else {
             TODO("VERSION.SDK_INT < O")
         }

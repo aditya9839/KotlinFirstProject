@@ -12,10 +12,9 @@ class AlarmReceiver : BroadcastReceiver()
         Log.d("Onreceive","Ser")
         val schedule = Utilll()
         if (p0 != null) {
-            schedule.scheduleJob(p0)
+            schedule.scheduleJob()
         }
 //        val background = Intent(p0, MyService::class.java)
 //        p0?.startService(background)
-        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
      }
 }
