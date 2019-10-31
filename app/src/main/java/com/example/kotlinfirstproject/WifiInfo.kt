@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.util.Log
 import androidx.core.content.ContextCompat
@@ -15,11 +14,10 @@ class WifiInfo(private val mctx: Context) : BroadcastReceiver() {
     override fun onReceive(p0: Context?, p1: Intent?) {
 
         Log.d("WifiReceiver", "Have Wifi Connection")
-
         getWifiInfo()
     }
 
-    private var wifiManager: WifiManager? = null
+    private var wifiManager: WifiManager ?= null
     private fun getWifiInfo(){
 
         if (ContextCompat.checkSelfPermission(mctx, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -27,14 +25,11 @@ class WifiInfo(private val mctx: Context) : BroadcastReceiver() {
             Log.d("TAG","No permission granted")
         }
 
-
-
-        wifiManager = mctx.getApplicationContext().getSystemService(Context.WIFI_SERVICE) as WifiManager
-
+        wifiManager = mctx.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
         if(wifiManager!!.isWifiEnabled) {
             Log.d("Tag", "wifi is enable")
-            var info = wifiManager!!.connectionInfo
+            val info = wifiManager!!.connectionInfo
             Log.d("TAG", "bssid is "+info.bssid)
         }
         else
@@ -66,9 +61,5 @@ class WifiInfo(private val mctx: Context) : BroadcastReceiver() {
 //        }
 //        else
 //            Log.d("tag","Not Connected")
-    }
-
-    companion object {
-        var bssid = ""
     }
 }
