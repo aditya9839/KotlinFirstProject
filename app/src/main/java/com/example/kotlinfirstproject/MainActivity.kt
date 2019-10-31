@@ -89,7 +89,8 @@ class MainActivity : AppCompatActivity() {
 //            var intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 //            startActivity(intent)
                         }
-                        ).addOnConnectionFailedListener { Log.d("TAG", "onConnectionFailed") }.build()
+                        ).addOnConnectionFailedListener { Log.d("TAG", "onConnectionFailed") }
+                        .build()
                 Log.d("Tag", "onRequestPermissionsResult :$mGoogleApiClient")
                 mGoogleApiClient?.connect()
 
