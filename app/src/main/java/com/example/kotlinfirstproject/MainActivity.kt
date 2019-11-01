@@ -20,11 +20,14 @@ import com.google.android.gms.location.*
 class MainActivity : AppCompatActivity() {
 
     private var mGoogleApiClient: GoogleApiClient? = null
+    private var fusedLoc: FusedLocation? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        fusedLoc =  FusedLocation(this)
 
     }
 
@@ -132,5 +135,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    fun locateMe(view: View) {
+        fusedLoc?.locationServicesClient()
+        fusedLoc?.createLocationRequest()
     }
 }
