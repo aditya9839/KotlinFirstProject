@@ -35,7 +35,7 @@ class FusedLocation(private var mCtx: MainActivity) {
                     Log.d("Tag", "Lat is $lat \n Lang is $long")
                 } else {
                     startLocationUpdates()
-                    Log.d("Tag", "Location is null")
+                    Log.d("Tag", "Location is being fetched")
                 }
             }
     }
