@@ -56,13 +56,15 @@ class FusedLocation(private var mCtx: MainActivity) {
         }
 
         task.addOnFailureListener { exception ->
+            Log.d("Tag","Task fails")
+
             if (exception is ResolvableApiException){
                 // Location settings are not satisfied, but this can be fixed
                 // by showing the user a dialog.
                 try {
                     // Show the dialog by calling startResolutionForResult(),
-                    // and check the result in onActivityResult().
-                    exception.startResolutionForResult(mCtx,
+//                     and check the result in onActivityResult().
+                    exception.startResolutionForResult(mCtx, //this line of code will promt the user to open his gps
                         1)
                 } catch (sendEx: IntentSender.SendIntentException) {
                     // Ignore the error.
