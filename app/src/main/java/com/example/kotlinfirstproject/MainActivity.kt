@@ -141,4 +141,10 @@ class MainActivity : AppCompatActivity() {
         fusedLoc?.locationServicesClient()
         fusedLoc?.createLocationRequest()
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        Log.d("Tag","Result")
+    }
 }

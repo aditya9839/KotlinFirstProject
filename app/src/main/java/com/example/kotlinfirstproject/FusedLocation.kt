@@ -1,10 +1,10 @@
 package com.example.kotlinfirstproject
 import android.content.IntentSender
 import android.location.Location
+import android.os.Looper
 import android.util.Log
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Task
-import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationSettingsResponse
 
@@ -13,6 +13,8 @@ import com.google.android.gms.location.LocationSettingsResponse
 class FusedLocation(private var mCtx: MainActivity) {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationRequest: LocationRequest
+    private lateinit var locationCallback: LocationCallback
 
     fun locationServicesClient() {
         Log.d("Tag", "object : $mCtx")
@@ -32,19 +34,31 @@ class FusedLocation(private var mCtx: MainActivity) {
 
                     Log.d("Tag", "Lat is $lat \n Lang is $long")
                 } else {
+                    startLocationUpdates()
                     Log.d("Tag", "Location is null")
                 }
             }
     }
 
     fun createLocationRequest() {
-        val locationRequest = LocationRequest.create()?.apply {
+        locationRequest = LocationRequest.create()?.apply {
             interval = 10000
             fastestInterval = 5000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }
+        }!!
         val builder = LocationSettingsRequest.Builder()
             .addLocationRequest(locationRequest!!)
+
+        //Needed to be removed after a point of time
+
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                locationResult ?: return
+                for (location in locationResult.locations){
+                    Log.d("Tag","Lat is "+location.latitude)
+                }
+            }
+        }
 
         val client: SettingsClient = LocationServices.getSettingsClient(mCtx)
         val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
@@ -52,6 +66,7 @@ class FusedLocation(private var mCtx: MainActivity) {
         task.addOnSuccessListener { locationSettingsResponse ->
             // All location settings are satisfied. The client can initialize
             // location requests here.
+
             Log.d("Tag","Task success")
         }
 
@@ -71,7 +86,13 @@ class FusedLocation(private var mCtx: MainActivity) {
                 }
             }
         }
-
 //        Log.d("Tag","" +task.result?.locationSettingsStates)
     }
+
+    private fun startLocationUpdates() {
+        fusedLocationClient.requestLocationUpdates(locationRequest,
+            locationCallback,
+            Looper.getMainLooper())
+    }
+
 }
